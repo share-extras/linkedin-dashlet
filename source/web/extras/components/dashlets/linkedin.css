@@ -1,0 +1,106 @@
+/* 
+   linkedin dashlet CSS
+*/
+.linkedin-dashlet > .scrollableList
+{
+    padding-top: 0;
+}
+.linkedin-dashlet div.detail-list-item
+{
+   min-height: 48px; /* No smaller that profile images */
+}
+.linkedin-dashlet > .body div.linkedin-dashlet-messages
+{
+   padding-left: 0;
+   padding-right: 0;
+}
+.linkedin-dashlet-connect {
+	text-align: center;
+    background-color: #FFFBDD;
+    border-bottom: 1px solid #DDD6A0;
+    padding-top: 8px;
+    padding-bottom: 8px;
+}
+.linkedin-dashlet-connect div {
+	margin-bottom: 1em;
+}
+.linkedin-message {
+    padding-top: 8px;
+    padding-left: 8px;
+    padding-right: 8px;
+}
+.linkedin-message-bd
+{
+   padding-bottom: 0.2em;
+}
+.linkedin-message-bd,
+.linkedin-message-postedOn
+{
+	margin-left: 56px;
+}
+.linkedin-message div.linkedin-message-postedOn,
+.linkedin-message div.linkedin-message-postedOn a,
+.linkedin-message div.linkedin-message-postedOn a:link,
+.linkedin-message div.linkedin-message-postedOn a:hover,
+.linkedin-message div.linkedin-message-postedOn a:visited
+{
+   color: #999999;
+}
+.linkedin-dashlet .user-icon
+{
+   float: left;
+}
+.linkedin-dashlet-utils {
+    padding-left: 8px;
+    padding-right: 8px;
+    padding-top: 8px;
+    padding-bottom: 8px;
+    font-size: 90%;
+    display: none;
+}
+.linkedin-dashlet-toolbar
+{
+    display: none;
+}
+.linkedin-actions
+{
+	display: none;
+}
+.linkedin-message:HOVER .linkedin-actions
+{
+	display: inline;
+}
+.linkedin-message:HOVER
+{
+	background-color: #f2f8fd;
+}
+.linkedin-favorite-link,
+.linkedin-favorite-link-on,
+.linkedin-reply-link
+{
+	display: inline;
+   background-image: url("linkedin-sprite.png");
+   background-repeat: no-repeat;
+	height: 16px;
+	overflow: hidden;
+   padding-left: 18px;
+   margin-left: 5px;
+   font-size: 85%;
+}
+.linkedin-favorite-link span,
+.linkedin-favorite-link-on span,
+.linkedin-reply-link span
+{
+}
+.linkedin-favorite-link
+{
+   background-position: 0px -49px;
+}
+.linkedin-favorite-link-on
+{
+   background-position: 0px -65px;
+}
+.linkedin-reply-link
+{
+   background-position: 0px -16px;
+}

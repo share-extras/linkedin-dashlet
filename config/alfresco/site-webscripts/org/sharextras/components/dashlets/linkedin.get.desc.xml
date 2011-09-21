@@ -1,0 +1,7 @@
+<webscript>
+   <shortname>LinkedIn Messages</shortname>
+   <description>Displays recent updates from LinkedIn on the dashboard</description>
+   <!-- one of dashlet, site-dashlet or user-dashlet -->
+   <family>user-dashlet</family>
+   <url>/extras/components/dashlets/linkedin</url>
+</webscript>
