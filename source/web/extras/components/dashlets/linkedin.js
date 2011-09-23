@@ -343,9 +343,16 @@ if (typeof Extras.dashlet == "undefined" || !Extras.dashlet)
        */
       _userLink: function LinkedIn__userLink(person)
       {
-          uname = person.firstName + " " + person.lastName;
-          profileUri = person.siteStandardProfileRequest.url;
-          return "<a href=\"" + profileUri + "\" title=\"" + $html(uname) + "\" class=\"theme-color-1\">" + $html(uname) + "</a>";
+          if (typeof person.siteStandardProfileRequest == "object")
+          {
+              var profileUri = person.siteStandardProfileRequest.url,
+                  uname = person.firstName + " " + person.lastName;
+              return "<a href=\"" + profileUri + "\" title=\"" + $html(uname) + "\" class=\"theme-color-1\">" + $html(uname) + "</a>";
+          }
+          else
+          {
+              return null;
+          }
       },
       
       /**
@@ -371,7 +378,7 @@ if (typeof Extras.dashlet == "undefined" || !Extras.dashlet)
                       uname = person.firstName + " " + person.lastName;
                       postedOn = message.timestamp;
                       profileUri = person.siteStandardProfileRequest.url;
-                      mugshotUri = person.pictureUrl || null;
+                      mugshotUri = person.pictureUrl || Alfresco.constants.URL_RESCONTEXT + "extras/components/dashlets/linkedin-anonymous.png";
                       userLink = this._userLink(person);
                       postedLink = "<span class=\"linkedin-message-date\" title=\"" + postedOn + "\">" + this._relativeTime(new Date(postedOn)) + "</span>";
                       if (updateType == "STAT")
@@ -380,14 +387,21 @@ if (typeof Extras.dashlet == "undefined" || !Extras.dashlet)
                       }
                       else if (updateType == "CONN")
                       {
-                          var connectionsStr = "", connections = person.connections.values, conn;
+                          var connectionsStr = "", connections = person.connections.values, conn, link;
                           for (var j = 0; j < connections.length; j++)
                           {
                               conn = connections[j];
-                              connectionsStr += this._userLink(conn) + (conn.headline != "" ? ", " + conn.headline : "");
-                              connectionsStr += (j == connections.length - 1) ? "" : (j == connections.length - 2 ? "" : this.msg("text.connected-and"));
+                              var link = this._userLink(conn);
+                              if (link != null)
+                              {
+                                  connectionsStr += link + (conn.headline != "" ? ", " + conn.headline : "");
+                                  connectionsStr += (j == connections.length - 1) ? "" : (j == connections.length - 2 ? "" : this.msg("text.connected-and"));
+                              }
                           }
-                          text = this.msg("text.connected", connectionsStr);
+                          if (connectionsStr != "")
+                          {
+                              text = this.msg("text.connected", connectionsStr);
+                          }
                       }
                       if (text != null)
                       {
