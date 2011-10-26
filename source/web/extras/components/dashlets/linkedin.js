@@ -340,14 +340,21 @@ if (typeof Extras.dashlet == "undefined" || !Extras.dashlet)
       
       /**
        * Generate a user link
+       * 
+       * @method _userLink
+       * @private
+       * @param {object} person Person object received from JSON API
+       * @param {string} html Optional link content, if omitted then person name will be used
        */
-      _userLink: function LinkedIn__userLink(person)
+      _userLink: function LinkedIn__userLink(person, html)
       {
-          if (typeof person.siteStandardProfileRequest == "object")
+          if (typeof person.siteStandardProfileRequest == "object" && typeof person.siteStandardProfileRequest.url == "string")
           {
               var profileUri = person.siteStandardProfileRequest.url,
-                  uname = person.firstName + " " + person.lastName;
-              return "<a href=\"" + profileUri + "\" title=\"" + $html(uname) + "\" class=\"theme-color-1\">" + $html(uname) + "</a>";
+                  uname = person.firstName + " " + person.lastName,
+                  title = html ? uname : (person.headline || uname),
+                  html = html || $html(uname);
+              return "<a href=\"" + $html(profileUri) + "\" title=\"" + $html(title) + "\" class=\"theme-color-1\">" + html + "</a>";
           }
           else
           {
@@ -377,36 +384,43 @@ if (typeof Extras.dashlet == "undefined" || !Extras.dashlet)
                       person = updateContent.person;
                       uname = person.firstName + " " + person.lastName;
                       postedOn = message.timestamp;
-                      profileUri = person.siteStandardProfileRequest.url;
+                      profileUri = (typeof person.siteStandardProfileRequest == "object" && typeof person.siteStandardProfileRequest.url == "string") ? 
+                              person.siteStandardProfileRequest.url : "";
                       mugshotUri = person.pictureUrl || Alfresco.constants.URL_RESCONTEXT + "extras/components/dashlets/linkedin-anonymous.png";
                       userLink = this._userLink(person);
                       postedLink = "<span class=\"linkedin-message-date\" title=\"" + postedOn + "\">" + this._relativeTime(new Date(postedOn)) + "</span>";
                       if (updateType == "STAT")
                       {
-                          text = this._formatMessage($html(person.currentStatus));
+                          if (typeof person.currentStatus == "string")
+                          {
+                              text = this._formatMessage($html(person.currentStatus));
+                          }
                       }
                       else if (updateType == "CONN")
                       {
-                          var connectionsStr = "", connections = person.connections.values, conn, link;
-                          for (var j = 0; j < connections.length; j++)
+                          if (typeof person.connections == "object") // Contacts may not be visible!
                           {
-                              conn = connections[j];
-                              var link = this._userLink(conn);
-                              if (link != null)
+                              var connectionsStr = "", connections = person.connections.values, conn, link;
+                              for (var j = 0; j < connections.length; j++)
                               {
-                                  connectionsStr += link + (conn.headline != "" ? ", " + conn.headline : "");
-                                  connectionsStr += (j == connections.length - 1) ? "" : (j == connections.length - 2 ? "" : this.msg("text.connected-and"));
+                                  conn = connections[j];
+                                  var link = this._userLink(conn);
+                                  if (link != null)
+                                  {
+                                      connectionsStr += link + (conn.headline != "" ? ", " + conn.headline : "");
+                                      connectionsStr += (j == connections.length - 1) ? "" : (j == connections.length - 2 ? "" : this.msg("text.connected-and"));
+                                  }
                               }
-                          }
-                          if (connectionsStr != "")
-                          {
-                              text = this.msg("text.connected", connectionsStr);
+                              if (connectionsStr != "")
+                              {
+                                  text = this.msg("text.connected", connectionsStr);
+                              }
                           }
                       }
                       if (text != null)
                       {
                           html += "<div class=\"linkedin-message detail-list-item\">" + "<div class=\"linkedin-message-hd\">" + 
-                          "<div class=\"user-icon\"><a href=\"" + profileUri + "\" title=\"" + $html(person.headline || uname) + "\"><img src=\"" + $html(mugshotUri) + "\" alt=\"" + $html(uname) + "\" width=\"48\" height=\"48\" /></a></div>" + 
+                          "<div class=\"user-icon\">" + this._userLink(person, "<img src=\"" + $html(mugshotUri) + "\" alt=\"" + $html(uname) + "\" width=\"48\" height=\"48\" />") + "</div>" + 
                           "</div><div class=\"linkedin-message-bd\">" + "<span class=\"screen-name\">" + userLink + "</span> " +
                           text + "</div>" + "<div class=\"linkedin-message-postedOn\">" + 
                           this.msg("text.msgDetails", postedLink) + 
